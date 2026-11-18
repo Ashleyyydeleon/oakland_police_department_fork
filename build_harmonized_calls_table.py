@@ -1,3 +1,4 @@
+from opd_paths import DATA  # finds files by name wherever they live in Box
 """
 Builds one harmonized long-format events table from '2021-2026current.xlsx'.
 
@@ -18,8 +19,8 @@ V1 scope decisions (see memory: opd_demand_forecasting_scope):
 import openpyxl
 import pandas as pd
 
-SOURCE = "../Data/Our Data/2021-2026current.xlsx"
-OUTPUT = "../Data/Our Data/harmonized_calls_2021_2026.parquet"
+SOURCE = str(DATA / "2021-2026current.xlsx")
+OUTPUT = str(DATA / "harmonized_calls_2021_2026.parquet")
 
 # Per-sheet column index map -> canonical field name.
 # Index positions taken from the header row of each sheet (0-based).

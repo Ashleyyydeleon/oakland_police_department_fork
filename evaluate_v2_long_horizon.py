@@ -1,3 +1,4 @@
+from opd_paths import DATA, OUT  # finds files by name wherever they live in Box
 """
 Evaluates the V2 (seasonal + holiday) NB model over a longer holdout than the
 1-week test used during development -- to get an honest read on "how good is
@@ -20,9 +21,9 @@ from pandas.tseries.holiday import USFederalHolidayCalendar
 import statsmodels.formula.api as smf
 import matplotlib.pyplot as plt
 
-CALLS_PARQUET = "../Data/Our Data/harmonized_calls_2021_2026.parquet"
-OUTPUT_PLOT = "../Outputs/v2_long_horizon_eval.png"
-OUTPUT_BIAS_PLOT = "../Outputs/v2_hour_of_day_bias.png"
+CALLS_PARQUET = str(DATA / "harmonized_calls_2021_2026.parquet")
+OUTPUT_PLOT = str(OUT / "v2_long_horizon_eval.png")
+OUTPUT_BIAS_PLOT = str(OUT / "v2_hour_of_day_bias.png")
 
 HOLDOUT_WEEKS = 13
 

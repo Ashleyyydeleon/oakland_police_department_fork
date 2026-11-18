@@ -8,7 +8,7 @@ The 2016-2021 five-Area era (35 snapshots incl. a 2016-19 per-watch split) was c
 import pandas as pd
 from box_utils import BOX_ROOT
 
-OUT = BOX_ROOT / "OPD & TAN - Core Workspace" / "02 Oakland Police Dept (OPD)" / "Data" / "Our Data"
+from opd_paths import DATA as OUT   # finds/creates the file in the right Box folder
 
 SRC = {  # as_of -> (document, url)
     "2022-03-31": ("City informational memo 2022-04-15 (Q1 2022), Table 8", "https://cao-94612.s3.amazonaws.com/documents/OPD-Qtrly-Staffing-Informational-Memo-1st-Quarter-2022.pdf"),

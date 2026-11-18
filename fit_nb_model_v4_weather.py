@@ -1,3 +1,4 @@
+from opd_paths import DATA, OUT  # finds files by name wherever they live in Box
 """
 V4: adds weather (temperature, precipitation) on top of V2 (seasonal +
 holiday, 2024+ training data only -- V3's trend term was dropped, see memory
@@ -26,9 +27,9 @@ from pandas.tseries.holiday import USFederalHolidayCalendar
 import statsmodels.formula.api as smf
 import matplotlib.pyplot as plt
 
-CALLS_PARQUET = "../Data/Our Data/harmonized_calls_2021_2026.parquet"
-WEATHER_PARQUET = "../Data/Our Data/weather_oakland_2024_2026.parquet"
-OUTPUT_BIAS_PLOT = "../Outputs/v4_hour_of_day_bias.png"
+CALLS_PARQUET = str(DATA / "harmonized_calls_2021_2026.parquet")
+WEATHER_PARQUET = str(DATA / "weather_oakland_2024_2026.parquet")
+OUTPUT_BIAS_PLOT = str(OUT / "v4_hour_of_day_bias.png")
 
 TRAIN_START = "2024-01-01"
 HOLDOUT_WEEKS = 13

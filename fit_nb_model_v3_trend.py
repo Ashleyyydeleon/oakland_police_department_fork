@@ -1,3 +1,4 @@
+from opd_paths import DATA, OUT  # finds files by name wherever they live in Box
 """
 V3: drops 2021-2023 (per project decision -- V1/V2 testing showed no accuracy
 benefit from the older years, and the CAD system itself changed in 2024) and
@@ -27,8 +28,8 @@ from pandas.tseries.holiday import USFederalHolidayCalendar
 import statsmodels.formula.api as smf
 import matplotlib.pyplot as plt
 
-CALLS_PARQUET = "../Data/Our Data/harmonized_calls_2021_2026.parquet"
-OUTPUT_BIAS_PLOT = "../Outputs/v3_hour_of_day_bias.png"
+CALLS_PARQUET = str(DATA / "harmonized_calls_2021_2026.parquet")
+OUTPUT_BIAS_PLOT = str(OUT / "v3_hour_of_day_bias.png")
 
 TRAIN_START = "2024-01-01"
 HOLDOUT_WEEKS = 13
