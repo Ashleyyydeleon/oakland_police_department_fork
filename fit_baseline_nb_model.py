@@ -1,3 +1,4 @@
+from opd_paths import DATA, OUT  # finds files by name wherever they live in Box
 """
 V1 baseline: forecast total 911 calls per hour using a Negative Binomial GLM
 on hour-of-day x day-of-week seasonality (a saturated 168-cell seasonal model).
@@ -20,8 +21,8 @@ import pandas as pd
 import statsmodels.formula.api as smf
 import matplotlib.pyplot as plt
 
-CALLS_PARQUET = "../Data/Our Data/harmonized_calls_2021_2026.parquet"
-OUTPUT_PLOT = "../Outputs/baseline_nb_model_test_week.png"
+CALLS_PARQUET = str(DATA / "harmonized_calls_2021_2026.parquet")
+OUTPUT_PLOT = str(OUT / "baseline_nb_model_test_week.png")
 
 TEST_HOURS = 7 * 24
 

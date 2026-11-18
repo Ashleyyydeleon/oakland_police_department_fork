@@ -1,3 +1,4 @@
+from opd_paths import DATA  # finds files by name wherever they live in Box
 """
 Fetches hourly historical weather for Oakland from Open-Meteo's free archive
 API (no key required) and caches it locally, so we don't hit the API again
@@ -15,7 +16,7 @@ import pandas as pd
 LAT, LON = 37.8044, -122.2712  # Oakland, CA
 START_DATE = "2024-01-01"
 END_DATE = "2026-06-30"
-OUTPUT = "../Data/Our Data/weather_oakland_2024_2026.parquet"
+OUTPUT = str(DATA / "weather_oakland_2024_2026.parquet")
 
 HOURLY_VARS = ["temperature_2m", "precipitation"]
 

@@ -1,3 +1,4 @@
+from opd_paths import DATA  # finds files by name wherever they live in Box
 """
 V2: adds a holiday feature on top of the V1 baseline (fit_baseline_nb_model.py),
 which only used hour-of-day x day-of-week seasonality.
@@ -27,7 +28,7 @@ import pandas as pd
 from pandas.tseries.holiday import USFederalHolidayCalendar
 import statsmodels.formula.api as smf
 
-CALLS_PARQUET = "../Data/Our Data/harmonized_calls_2021_2026.parquet"
+CALLS_PARQUET = str(DATA / "harmonized_calls_2021_2026.parquet")
 
 TEST_WEEKS = {
     "recent_week": ("2026-06-24", "2026-07-01"),   # last week in the data
