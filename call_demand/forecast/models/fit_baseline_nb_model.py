@@ -1,3 +1,7 @@
+import sys
+from pathlib import Path
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "opd_paths.py").exists())   # repo root, where the shared helpers live
+sys.path.insert(0, str(REPO))
 from opd_paths import DATA, OUT  # finds files by name wherever they live in Box
 """
 V1 baseline: forecast total 911 calls per hour using a Negative Binomial GLM

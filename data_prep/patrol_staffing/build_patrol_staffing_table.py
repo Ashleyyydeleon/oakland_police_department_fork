@@ -6,6 +6,10 @@ Writes Box 'Patrol Staffing/Cleaned/opd_patrol_officers_by_area.csv' (source PDF
 The 2016-2021 five-Area era (35 snapshots incl. a 2016-19 per-watch split) was compiled in commit
 21d3e04 and dropped afterwards because the beats were reassigned when OPD went to 6 Areas."""
 import pandas as pd
+import sys
+from pathlib import Path
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "opd_paths.py").exists())   # repo root, where the shared helpers live
+sys.path.insert(0, str(REPO))
 from box_utils import BOX_ROOT
 
 from opd_paths import DATA as OUT   # finds/creates the file in the right Box folder

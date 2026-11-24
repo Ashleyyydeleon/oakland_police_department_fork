@@ -28,6 +28,6 @@ mp = pd.read_csv(MANPOWER_RAW / "Man_Power_2024_July.csv")          # raw Man_Po
 - New outputs are filed by name prefix (e.g. `p1_median_response_time_by_hour_by_area_2027.png` goes next to the 2026 chart).
 
 ## If your script or notebook stopped finding a file
-1. `git pull` this repo (scripts were updated to use `opd_paths`), and make sure `opd_paths.py` is next to your script/notebook.
+1. `git pull` this repo (scripts were updated to use `opd_paths`), `opd_paths.py` stays at the repo root; files in subfolders find it with the `REPO = ...` line at the top of their import cell (copy it into any new notebook or script).
 2. Replace any hand-built path (`"../Data/Our Data/..."`, `BOX_ROOT / ... / "Outputs"`, `BOX_ROOT / "00_one_percent"`) with `DATA / "name"`, `OUT / "name"` or `MANPOWER_RAW / "name"`.
 3. Still stuck? Look the old name up in `MOVED_FILES.csv`.

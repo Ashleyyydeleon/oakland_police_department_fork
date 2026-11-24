@@ -1,3 +1,7 @@
+import sys
+from pathlib import Path
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "opd_paths.py").exists())   # repo root, where the shared helpers live
+sys.path.insert(0, str(REPO))
 from opd_paths import DATA  # finds files by name wherever they live in Box
 """
 Builds one harmonized long-format events table from '2021-2026current.xlsx'.

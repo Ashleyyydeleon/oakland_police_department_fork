@@ -1,3 +1,7 @@
+import sys
+from pathlib import Path
+REPO = next(p for p in Path(__file__).resolve().parents if (p / "opd_paths.py").exists())   # repo root, where the shared helpers live
+sys.path.insert(0, str(REPO))
 from opd_paths import DATA  # finds files by name wherever they live in Box
 """
 V2: adds a holiday feature on top of the V1 baseline (fit_baseline_nb_model.py),
