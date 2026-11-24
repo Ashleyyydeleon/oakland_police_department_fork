@@ -1,7 +1,7 @@
 """Compile 'Number of officers assigned to patrol' by Area from OPD staffing reports to City Council
 for the current 6-Area boundaries (Mar 2022 onward). Values were read from each report's 'Police Beat
 Patrol Data' table and cross-checked so the Areas sum to the printed citywide total.
-Writes Data/Our Data/opd_patrol_officers_by_area.csv (source PDFs are in Data/Our Data/OPD Reports/).
+Writes Box 'Patrol Staffing/Cleaned/opd_patrol_officers_by_area.csv' (source PDFs are in 'Patrol Staffing/Raw/').
 
 The 2016-2021 five-Area era (35 snapshots incl. a 2016-19 per-watch split) was compiled in commit
 21d3e04 and dropped afterwards because the beats were reassigned when OPD went to 6 Areas."""

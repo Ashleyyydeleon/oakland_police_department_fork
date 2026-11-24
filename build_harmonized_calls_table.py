@@ -3,7 +3,7 @@ from opd_paths import DATA  # finds files by name wherever they live in Box
 Builds one harmonized long-format events table from '2021-2026current.xlsx'.
 
 The source workbook has one sheet per year with a different column schema each
-time (see '../Data/Our Data/2021-2026current - DATA GUIDE.md' section 2 for the
+time (see Box 'CAD Calls (Computer-Aided Dispatch)/Docs/cad_calls_2021-2026_DATA_GUIDE.md' section 2 for the
 full mapping). This script maps every sheet's columns onto one canonical schema,
 concatenates all years, and writes the result to a single parquet file for reuse
 by downstream modeling scripts (no need to re-read the 200MB xlsx each time).

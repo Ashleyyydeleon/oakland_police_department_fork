@@ -7,10 +7,12 @@ build paths by hand break whenever folders move. Use this module instead:
     df  = pd.read_parquet(DATA / "harmonized_calls_2021_2026.parquet")   # finds the file wherever it is
     fig.savefig(OUT / "dispatcher_story_1_phone_demand_vs_staffing_2024.png")  # goes to the right Graphs/ subfolder
 
-* Works with the NEW layout and falls back to the OLD one, so it is safe before and after the move.
+* Works with the current layout (data inside "Data Collection/") and falls back to older ones.
+  If a file is still not found, it searches the whole OPD folder for that file name.
 * Accepts a file's old name or its new name (e.g. "story_1_..." or "dispatcher_story_1_...").
 * Finds Box on any machine (env var BOX_ROOT overrides; OPD_ROOT overrides the OPD folder itself).
 * ROOT is the OPD folder (plain Path): ROOT / "cache" / "hourly_calls.parquet".
+* MANPOWER_RAW is the raw Man_Power folder outside the OPD folder: MANPOWER_RAW / "Man_Power_2024_July.csv".
 
 Check your setup:  python opd_paths.py --check
 """
@@ -311,8 +313,13 @@ _MOVES = [('Data Collection (Police Officer)/Our Data/2021-2026current - DATA GU
 
 WORKSPACE = "OPD & TAN - Core Workspace"
 OPD_FOLDER_NAMES = ("OPD - Oakland Police Dept", "02 Oakland Police Dept (OPD)")
-_PO, _DI, _DO = "Data Collection (Police Officer)", "Data Collection (Dispatcher)", "Data Outputs"
-_OLD_DIRS = (f"{_PO}/Our Data", _DO, "Data/Our Data", "Outputs", f"{_DI}/Our Data")   # older layouts, searched last
+# Current layout (Nov 2026): both data folders sit inside "Data Collection/".
+_PO, _DI, _DO = "Data Collection/Data Collection (Officer)", "Data Collection/Data Collection (Dispatcher)", "Data Outputs"
+# The table above was written for the 17 Nov layout, which had these two folders at the top of the OPD folder.
+# _current() rewrites those paths to the current layout; the 17 Nov paths are still tried as a fallback.
+_LAYOUT_RENAMES = (("Data Collection (Police Officer)/", f"{_PO}/"), ("Data Collection (Dispatcher)/", f"{_DI}/"))
+_OLD_DIRS = (f"{_PO}/Our Data", _DO, "Data Collection (Police Officer)/Our Data", "Data/Our Data", "Outputs",
+             f"{_DI}/Our Data", "Data Collection (Dispatcher)/Our Data")   # flat folders of older layouts, searched last
 _DIR_ALIASES = {"OPD Reports": f"{_PO}/Our Data/Patrol Staffing/Raw"}
 _IMAGES = {".png", ".jpg", ".jpeg", ".svg", ".pdf"}
 # New output files that are not in the table above are filed by name prefix (so a 2027 chart lands next to the 2026 one):
@@ -351,11 +358,33 @@ def _find_root() -> Path:
     raise FileNotFoundError(f"No OPD folder found in {ws}. Is the Box folder synced? (looked for {OPD_FOLDER_NAMES})")
 
 
+def _current(path):
+    """A path from the table above, rewritten to the current folder layout."""
+    for before, after in _LAYOUT_RENAMES:
+        if path.startswith(before):
+            return after + path[len(before):]
+    return path
+
+
 ROOT = _find_root()
 _BY_NAME = {}
 for _old, _new in _MOVES:
-    _BY_NAME[os.path.basename(_new)] = (_new, _old)
-    _BY_NAME[os.path.basename(_old)] = (_new, _old)
+    _BY_NAME[os.path.basename(_new)] = (_current(_new), _new, _old)
+    _BY_NAME[os.path.basename(_old)] = (_current(_new), _new, _old)
+
+_ALL_FILES = None
+
+
+def _search(*names):
+    """Last resort if Box was reorganised again: the one file under ROOT with one of these names (None if 0 or 2+)."""
+    global _ALL_FILES
+    if _ALL_FILES is None:
+        _ALL_FILES = {}
+        for folder, _, files in os.walk(ROOT):
+            for f in files:
+                _ALL_FILES.setdefault(f, []).append(Path(folder) / f)
+    hits = {p for n in names for p in _ALL_FILES.get(n, [])}
+    return hits.pop() if len(hits) == 1 else None
 
 
 def locate(name, kind="data", create=False) -> Path:
@@ -367,14 +396,17 @@ def locate(name, kind="data", create=False) -> Path:
     base = os.path.basename(name)
     hit = _BY_NAME.get(base)
     if hit:
-        new, old = hit
-        for c in [ROOT / new, ROOT / old] + [ROOT / d / os.path.basename(old) for d in _OLD_DIRS]:
+        current, new, old = hit
+        for c in [ROOT / current, ROOT / new, ROOT / old] + [ROOT / d / os.path.basename(old) for d in _OLD_DIRS]:
             if c.exists():
                 return c
-        target = ROOT / new
-    else:
-        found = [ROOT / d / base for d in _OLD_DIRS if (ROOT / d / base).exists()]
+        found = _search(os.path.basename(current), os.path.basename(old))
         if found:
+            return found
+        target = ROOT / current
+    else:
+        found = [ROOT / d / base for d in _OLD_DIRS if (ROOT / d / base).exists()] or [_search(base)]
+        if found[0]:
             return found[0]
         if kind == "out":
             is_img = Path(base).suffix.lower() in _IMAGES
@@ -408,6 +440,20 @@ class _Folder:
 
 DATA = _Folder("data", f"{_PO}/Our Data")
 OUT = _Folder("out", f"{_DO}/Graphs")
+
+
+def _find_manpower_raw() -> Path:
+    """The raw Man_Power / MV_ / UDT4_ files live outside the OPD folder, in a Box folder whose name differs by
+    machine ("2026.09.29 one_percent", "00_one_percent"). Env var MANPOWER_RAW overrides."""
+    env = os.environ.get("MANPOWER_RAW")
+    if env and Path(env).expanduser().is_dir():
+        return Path(env).expanduser()
+    box = _find_box_root()
+    found = sorted(p for p in box.glob("*one_percent") if p.is_dir())
+    return found[0] if found else box / "one_percent"   # a missing folder only fails when a file in it is read
+
+
+MANPOWER_RAW = _find_manpower_raw()
 
 
 def check():

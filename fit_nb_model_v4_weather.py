@@ -13,7 +13,7 @@ than a secular trend -- weather is a more principled way to capture that
 than a coarse month dummy.
 
 Weather source: Open-Meteo historical archive API for Oakland, cached at
-Data/Our Data/weather_oakland_2024_2026.parquet (see fetch_weather_data.py).
+Box 'Geography and External/Cleaned/weather_oakland_2024_2026.parquet' (see fetch_weather_data.py).
 Includes temp_c (with a quadratic term, since both very cold and very hot
 could plausibly push calls up) and precip_mm.
 
